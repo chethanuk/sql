@@ -1,0 +1,80 @@
+# image: gitpod/workspace-full
+image:
+  file: gitpod.Dockerfile
+checkoutLocation: gitpod-k3s
+tasks:
+  # K3s
+  - name: prepare k3s
+    command: |
+      .gitpod/prepare-k3s.sh
+  - name: kernel dev environment
+    init: |
+      sudo apt update -y
+      sudo apt install qemu qemu-system-x86 linux-image-$(uname -r) libguestfs-tools sshpass netcat -y
+      sudo curl -o /usr/bin/kubectl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      sudo chmod +x /usr/bin/kubectl
+      .gitpod/prepare-rootfs.sh
+    command: |
+      .gitpod/qemu.sh
+  # ENV Variables
+  - name: Example of passing an environment variable to a command
+    env:
+      PRINT_ME: "HelloWorld!"
+    command: echo $PRINT_ME
+
+  # Docker Compose
+  - init: |
+      cd docker && docker-compose pull
+  - command: |
+      cd docker && docker-compose up
+
+ports:
+  - port: 5432
+    onOpen: ignore
+  - port: 3000
+    onOpen: open-browser
+  # - port: 9200
+  #   onOpen: open-preview
+  # - port: 9300
+  #   onOpen: ignore
+  # - port: 9600
+  #   onOpen: ignore
+
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker
+    - eamodio.gitlens
+    - mutantdino.resourcemonitor
+    - ms-azuretools.vscode-docker
+    - ms-python.python
+    - ms-python.vscode-pylance
+    - ms-toolsai.jupyter
+    - redhat.vscode-yaml
+    - ms-kubernetes-tools.vscode-kubernetes-tools
+    - mshdinsight.azure-hdinsight
+    # ARepl for Python: https://www.gitpod.io/docs/languages/python#arepl-for-python
+    - almenon.arepl@1.0.20:Uu7lIOwyLgmNWpTwCl/iqQ==
+    # Python Test Explorer
+    - littlefoxteam.vscode-python-test-adapter@0.3.16:tZ/6xOSSdKUaq6JCUVkD+A==
+    # Java
+    - redhat.java
+    - vscjava.vscode-java-debug
+    - vscjava.vscode-java-test
+    - pivotal.vscode-spring-boot
+
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  pg_database:
+    image: postgres:13.0
+    environment:
+    - POSTGRES_PASSWORD=1234
+    - POSTGRES_USER=postgres
+    - POSTGRES_DB=nortwind_db
+    volumes:
+    - ./sql_init/:/docker-entrypoint-initdb.d
+    - ./data/:/data
+
+  dashboard:
+    image: metabase/metabase:latest
+    ports:
+    - 3000:3000
+    volumes:
+    - ./metabase_data/:/metabase-data
+    environment:
+    - MB_DB_FILE=/metabase-data/metabase.db
+    depends_on:
+    - pg_database
+# networks:
+#   elastic:
+#     driver: bridge
