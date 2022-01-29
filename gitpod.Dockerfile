@@ -2,6 +2,7 @@ FROM gitpod/workspace-full
 
 USER root
 
+# Install tailscale Helm and Kubectl
 RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add - &&\
      curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list &&\
      apt-get update &&\
@@ -15,6 +16,22 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key
      echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list &&\
      # Update and Install Helm and Kubectl
      apt-get update &&\
-     apt-get install helm kubectl &&\
+     apt-get install -y helm kubectl &&\
      echo "Helm version: " && helm version &&\
      echo "kubectl version: " && kubectl version --client
+
+
+# Install SDKMan, Spark and Flink
+RUN bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh &&\
+     sdk install java 11.0.14-zulu &&\
+     sdk install spark 3.1.2 &&\
+     sdk install flink 1.14.0 &&\
+     sdk install kcctl &&\
+     sdk install scala &&\
+     sdk install visualvm" &&\
+     apt-get install -y mysql-client &&\
+     # Cleaning up
+     rm -rf /var/lib/apt
+
+
+

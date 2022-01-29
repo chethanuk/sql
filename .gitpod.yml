@@ -1,8 +1,11 @@
+---
 # image: gitpod/workspace-full
 image:
   file: gitpod.Dockerfile
 checkoutLocation: gitpod-k3s
 tasks:
+  # Force prebuild
+  # - init: ./configure && timeout 45m make -j16 || true
   # K3s
   - name: prepare k3s
     command: |
@@ -16,51 +19,46 @@ tasks:
       .gitpod/prepare-rootfs.sh
     command: |
       .gitpod/qemu.sh
-  # ENV Variables
+# ENV Variables
   - name: Example of passing an environment variable to a command
     env:
       PRINT_ME: "HelloWorld!"
     command: echo $PRINT_ME
 
-  # Docker Compose
-  - init: |
-      cd docker && docker-compose pull
-  - command: |
-      cd docker && docker-compose up
-
+# Docker Compose
+# - init: |
+#     cd docker && docker-compose pull
+# - command: |
+#     cd docker && docker-compose up
 ports:
   - port: 5432
     onOpen: ignore
-  - port: 3000
-    onOpen: open-browser
-  # - port: 9200
-  #   onOpen: open-preview
-  # - port: 9300
-  #   onOpen: ignore
-  # - port: 9600
-  #   onOpen: ignore
+# - port: 3000
+#   onOpen: open-browser
 
 vscode:
   extensions:
     - ms-azuretools.vscode-docker
     - eamodio.gitlens
-    - mutantdino.resourcemonitor
+    # - mutantdino.resourcemonitor
+    - anwar.resourcemonitor
     - ms-azuretools.vscode-docker
     - ms-python.python
-    - ms-python.vscode-pylance
+    # - ms-python.vscode-pylance
     - ms-toolsai.jupyter
     - redhat.vscode-yaml
     - ms-kubernetes-tools.vscode-kubernetes-tools
-    - mshdinsight.azure-hdinsight
     # ARepl for Python: https://www.gitpod.io/docs/languages/python#arepl-for-python
-    - almenon.arepl@1.0.20:Uu7lIOwyLgmNWpTwCl/iqQ==
+    - almenon.arepl
     # Python Test Explorer
-    - littlefoxteam.vscode-python-test-adapter@0.3.16:tZ/6xOSSdKUaq6JCUVkD+A==
+    - littlefoxteam.vscode-python-test-adapter
+    # Markdown
+    - yzhang.markdown-all-in-one
     # Java
-    - redhat.java
-    - vscjava.vscode-java-debug
-    - vscjava.vscode-java-test
-    - pivotal.vscode-spring-boot
+    # - redhat.java
+    # - vscjava.vscode-java-debug
+    # - vscjava.vscode-java-test
+    # - pivotal.vscode-spring-boot
 
 github:
   prebuilds:
@@ -77,4 +75,4 @@ github:
     # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
     addComment: false
     # add a "Review in Gitpod" button to the pull request's description (defaults to false)
-    addBadge: false
+    addBadge: true
