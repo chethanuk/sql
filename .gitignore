@@ -1,4 +1,6 @@
 _output/
+.idea/
+.idea/misc.xml
 
 ###############
 ###  Python  ##
