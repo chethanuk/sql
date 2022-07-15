@@ -19,11 +19,13 @@ tasks:
       .gitpod/prepare-rootfs.sh
     command: |
       .gitpod/qemu.sh
-# ENV Variables
+  # ENV Variables
   - name: Example of passing an environment variable to a command
     env:
       PRINT_ME: "HelloWorld!"
     command: echo $PRINT_ME
+  - name: Start Jupyter
+    command: jupyter notebook
 
 # Docker Compose
 # - init: |
@@ -33,6 +35,8 @@ tasks:
 ports:
   - port: 5432
     onOpen: ignore
+  - port: 8888
+    onOpen: open-preview
 # - port: 3000
 #   onOpen: open-browser
 

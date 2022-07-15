@@ -1,4 +1,5 @@
-FROM gitpod/workspace-full
+ARG GITPOD_IMAGE=gitpod/workspace-full:latest
+FROM ${GITPOD_IMAGE}
 
 USER root
 
@@ -30,6 +31,7 @@ RUN bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh &&\
      sdk install scala &&\
      sdk install visualvm" &&\
      apt-get install -y mysql-client &&\
+     pip3 install jupyterlab pandas matplotlib pyspark==3.1.2 &&\
      # Cleaning up
      rm -rf /var/lib/apt
 
