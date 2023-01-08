@@ -33,6 +33,8 @@ tasks:
 # - command: |
 #     cd docker && docker-compose up
 ports:
+  - port: 3306
+    onOpen: ignore
   - port: 5432
     onOpen: ignore
   - port: 8888
